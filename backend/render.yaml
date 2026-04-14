@@ -8,10 +8,6 @@ services:
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: UPLOAD_DIR
-        value: /opt/render/project/uploads
+        value: /tmp/uploads
       - key: OUTPUT_DIR
-        value: /opt/render/project/outputs
-    disk:
-      name: vuurkorf-data
-      mountPath: /opt/render/project
-      sizeGB: 1
+        value: /tmp/outputs
