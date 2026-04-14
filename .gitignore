@@ -1,0 +1,17 @@
+# Node
+frontend/node_modules/
+frontend/.next/
+frontend/.env.local
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+backend/data/orders.json
+
+# Vercel
+.vercel/
+
+# OS
+.DS_Store

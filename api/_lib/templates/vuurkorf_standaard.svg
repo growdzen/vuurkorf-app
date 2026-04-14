@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="800" height="600">
+  <title>Vuurkorf Standaard Template</title>
+  <defs>
+    <style>
+      .korf-body { fill: #2a2a2a; stroke: #111; stroke-width: 2; }
+      .korf-rand { fill: none; stroke: #555; stroke-width: 3; }
+      .korf-poot { fill: #1a1a1a; stroke: #111; stroke-width: 2; }
+      .motief-gebied-outline { fill: #f5f0e8; stroke: #c0392b; stroke-width: 2; stroke-dasharray: 8,4; }
+      .motief-label { fill: #c0392b; font-family: sans-serif; font-size: 13px; font-style: italic; }
+      .korf-label { fill: #666; font-family: sans-serif; font-size: 11px; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="800" height="600" fill="#f8f6f0"/>
+
+  <!-- Vuurkorf body (cylinder silhouette) -->
+  <!-- Top ellipse (open top) -->
+  <ellipse cx="400" cy="110" rx="220" ry="40" class="korf-rand"/>
+
+  <!-- Cylinder sides -->
+  <path d="M 180 110 Q 160 300 170 480 L 630 480 Q 640 300 620 110 Z" class="korf-body"/>
+
+  <!-- Bottom ellipse -->
+  <ellipse cx="400" cy="480" rx="230" ry="42" class="korf-body"/>
+  <ellipse cx="400" cy="480" rx="230" ry="42" fill="none" stroke="#111" stroke-width="2"/>
+
+  <!-- Top rim detail -->
+  <ellipse cx="400" cy="110" rx="220" ry="40" fill="#333" stroke="#555" stroke-width="3"/>
+
+  <!-- Poten (legs) — 3 legs -->
+  <rect x="230" y="518" width="22" height="60" rx="4" class="korf-poot"/>
+  <rect x="389" y="522" width="22" height="56" rx="4" class="korf-poot"/>
+  <rect x="548" y="518" width="22" height="60" rx="4" class="korf-poot"/>
+
+  <!-- Voet platen -->
+  <rect x="218" y="574" width="46" height="8" rx="2" class="korf-poot"/>
+  <rect x="377" y="574" width="46" height="8" rx="2" class="korf-poot"/>
+  <rect x="536" y="574" width="46" height="8" rx="2" class="korf-poot"/>
+
+  <!-- MOTIEF GEBIED — the zone where the customer silhouette will be placed -->
+  <rect
+    id="motief-gebied"
+    x="210"
+    y="140"
+    width="380"
+    height="300"
+    rx="6"
+    class="motief-gebied-outline"
+  />
+
+  <!-- Motief label -->
+  <text x="400" y="296" text-anchor="middle" class="motief-label">Uw motief komt hier</text>
+  <text x="400" y="314" text-anchor="middle" class="motief-label">(380 x 300 mm)</text>
+
+  <!-- Corner markers for motief-gebied -->
+  <line x1="210" y1="140" x2="230" y2="140" stroke="#c0392b" stroke-width="2"/>
+  <line x1="210" y1="140" x2="210" y2="160" stroke="#c0392b" stroke-width="2"/>
+  <line x1="590" y1="140" x2="570" y2="140" stroke="#c0392b" stroke-width="2"/>
+  <line x1="590" y1="140" x2="590" y2="160" stroke="#c0392b" stroke-width="2"/>
+  <line x1="210" y1="440" x2="230" y2="440" stroke="#c0392b" stroke-width="2"/>
+  <line x1="210" y1="440" x2="210" y2="420" stroke="#c0392b" stroke-width="2"/>
+  <line x1="590" y1="440" x2="570" y2="440" stroke="#c0392b" stroke-width="2"/>
+  <line x1="590" y1="440" x2="590" y2="420" stroke="#c0392b" stroke-width="2"/>
+
+  <!-- Template label -->
+  <text x="400" y="590" text-anchor="middle" class="korf-label">Vuurkorf Standaard — Template v1.0 — Growdzen</text>
+</svg>

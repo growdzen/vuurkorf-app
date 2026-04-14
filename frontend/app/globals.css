@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 20 14% 10%;
+    --card: 0 0% 100%;
+    --card-foreground: 20 14% 10%;
+    --border: 20 6% 88%;
+    --input: 20 6% 88%;
+    --primary: 16 72% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 20 14% 95%;
+    --secondary-foreground: 20 14% 20%;
+    --muted: 20 10% 93%;
+    --muted-foreground: 20 10% 45%;
+    --accent: 16 72% 95%;
+    --accent-foreground: 16 72% 30%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --ring: 16 72% 50%;
+    --radius: 0.5rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer utilities {
+  .step-indicator {
+    @apply flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold;
+  }
+
+  .step-active {
+    @apply bg-fire text-white;
+  }
+
+  .step-completed {
+    @apply bg-green-500 text-white;
+  }
+
+  .step-pending {
+    @apply bg-gray-200 text-gray-500;
+  }
+
+  .radio-card {
+    @apply border-2 rounded-lg p-4 cursor-pointer transition-all duration-150;
+  }
+
+  .radio-card-selected {
+    @apply border-fire bg-fire/5;
+  }
+
+  .radio-card-unselected {
+    @apply border-gray-200 hover:border-gray-300;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #d94f28;
+  border-radius: 3px;
+}

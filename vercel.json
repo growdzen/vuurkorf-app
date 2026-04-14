@@ -1,0 +1,19 @@
+{
+  "version": 2,
+  "buildCommand": "cd frontend && npm install && npm run build",
+  "outputDirectory": "frontend/.next",
+  "framework": "nextjs",
+  "functions": {
+    "api/*.py": {
+      "runtime": "vercel-python@0.0.4",
+      "maxDuration": 60
+    }
+  },
+  "routes": [
+    { "src": "/api/health", "dest": "/api/health.py" },
+    { "src": "/api/upload", "dest": "/api/upload.py" },
+    { "src": "/api/process", "dest": "/api/process.py" },
+    { "src": "/api/preview", "dest": "/api/preview.py" },
+    { "src": "/api/orders", "dest": "/api/orders.py" }
+  ]
+}
