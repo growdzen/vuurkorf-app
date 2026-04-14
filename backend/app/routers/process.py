@@ -22,8 +22,8 @@ router = APIRouter()
 # In-memory job store (MVP — no Redis/Celery needed)
 jobs_store: dict[str, ProcessingJob] = {}
 
-UPLOAD_DIR = Path("/tmp/uploads")
-OUTPUT_DIR = Path("/tmp/outputs")
+UPLOAD_DIR = Path(os.environ.get("UPLOAD_DIR", "/tmp/uploads"))
+OUTPUT_DIR = Path(os.environ.get("OUTPUT_DIR", "/tmp/outputs"))
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
