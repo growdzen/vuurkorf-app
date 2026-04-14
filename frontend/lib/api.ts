@@ -54,6 +54,7 @@ export interface PricingResult {
 export interface PreviewResponse {
   job_id: string;
   status: JobStatus;
+  step?: string;
   error: string | null;
   svg?: string;
   validation?: ValidationResult;
