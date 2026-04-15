@@ -1,15 +1,15 @@
 """
 Process router: POST /process/{job_id}
 Starts the AI pipeline as a FastAPI BackgroundTask.
-In-memory jobs_store tracks job state.
+In-memory jobs_store tracks job state, file_store holds uploaded bytes.
 """
 import os
-import glob
 from pathlib import Path
 from fastapi import APIRouter, BackgroundTasks, HTTPException
 from fastapi.responses import JSONResponse
 
 from app.models.job import ProcessingJob, JobStatus, JobStep
+from app.store import file_store
 from app.services.image_processor import process_image
 from app.services.vectorizer import raster_to_svg
 from app.services.template_integrator import integrate_silhouette
@@ -22,18 +22,8 @@ router = APIRouter()
 # In-memory job store (MVP — no Redis/Celery needed)
 jobs_store: dict[str, ProcessingJob] = {}
 
-UPLOAD_DIR = Path(os.environ.get("UPLOAD_DIR", "/tmp/uploads"))
 OUTPUT_DIR = Path(os.environ.get("OUTPUT_DIR", "/tmp/outputs"))
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-
-
-def _find_uploaded_file(job_id: str) -> str | None:
-    """Find the uploaded file for a given job_id."""
-    for ext in [".jpg", ".jpeg", ".png", ".webp"]:
-        candidate = UPLOAD_DIR / f"{job_id}{ext}"
-        if candidate.exists():
-            return str(candidate)
-    return None
 
 
 async def run_pipeline(job_id: str, material: str, thickness: float):
@@ -46,22 +36,21 @@ async def run_pipeline(job_id: str, material: str, thickness: float):
         return
 
     try:
-        # Step 1: Read uploaded file
-        file_path = _find_uploaded_file(job_id)
-        if not file_path:
+        # Step 1: Read uploaded file from in-memory store
+        entry = file_store.get(job_id)
+        if not entry:
             job.status = JobStatus.failed
-            job.error = "Geupload bestand niet gevonden."
+            job.error = "Geupload bestand niet gevonden in store."
             jobs_store[job_id] = job
             return
+
+        image_bytes, ext = entry
 
         job.status = JobStatus.processing
         job.step = JobStep.remove_background
         jobs_store[job_id] = job
 
         # Step 2: Process image (remove bg + silhouette)
-        with open(file_path, "rb") as f:
-            image_bytes = f.read()
-
         job.step = JobStep.silhouette
         jobs_store[job_id] = job
         silhouette_png = process_image(image_bytes)
@@ -112,6 +101,9 @@ async def run_pipeline(job_id: str, material: str, thickness: float):
         }
         jobs_store[job_id] = job
 
+        # Clean up memory after processing
+        file_store.pop(job_id, None)
+
     except Exception as exc:
         job = jobs_store.get(job_id, ProcessingJob(id=job_id))
         job.status = JobStatus.failed
@@ -143,8 +135,8 @@ async def start_processing(
             detail=f"Ongeldige dikte {thickness}mm. Kies uit: {allowed_thicknesses}",
         )
 
-    # Check upload exists
-    if not _find_uploaded_file(job_id):
+    # Check upload exists in memory
+    if job_id not in file_store:
         raise HTTPException(
             status_code=404,
             detail=f"Geen geupload bestand gevonden voor job_id '{job_id}'.",
@@ -164,4 +156,20 @@ async def start_processing(
             "status": "pending",
             "message": "Verwerking gestart.",
         },
+    )
+
+
+@router.get("/process/{job_id}/status")
+async def get_job_status(job_id: str):
+    job = jobs_store.get(job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail=f"Job '{job_id}' niet gevonden.")
+    return JSONResponse(
+        content={
+            "job_id": job_id,
+            "status": job.status,
+            "step": job.step,
+            "result": job.result,
+            "error": job.error,
+        }
     )
