@@ -149,3 +149,28 @@ export async function createOrder(
   });
   return handleResponse<OrderResponse>(res);
 }
+
+// ─── Admin ────────────────────────────────────────────────────────────────────
+
+export interface AdminOrder {
+  id: string;
+  job_id: string;
+  name: string;
+  email: string;
+  material: string;
+  thickness: number;
+  scale: number;
+  offset_x: number;
+  offset_y: number;
+  price: number | null;
+  status: string;
+  created_at: string;
+}
+
+/**
+ * Fetch all orders (admin).
+ */
+export async function listOrders(): Promise<AdminOrder[]> {
+  const res = await fetch(`${API_BASE}/api/orders`);
+  return handleResponse<AdminOrder[]>(res);
+}

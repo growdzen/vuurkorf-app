@@ -3,6 +3,7 @@ Orders router: POST /orders
 Saves order data to a JSON file (MVP — no database needed).
 """
 import json
+import os
 import uuid
 from pathlib import Path
 from datetime import datetime
@@ -15,8 +16,9 @@ from app.models.job import JobStatus
 
 router = APIRouter()
 
-ORDERS_FILE = Path("/home/sprite/vuurkorf/backend/data/orders.json")
-ORDERS_FILE.parent.mkdir(parents=True, exist_ok=True)
+_orders_dir = Path(os.environ.get("DATA_DIR", "/tmp/data"))
+_orders_dir.mkdir(parents=True, exist_ok=True)
+ORDERS_FILE = _orders_dir / "orders.json"
 
 
 def _load_orders() -> list:
