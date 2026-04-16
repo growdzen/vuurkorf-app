@@ -15,6 +15,7 @@ from app.services.vectorizer import raster_to_svg
 from app.services.template_integrator import integrate_silhouette
 from app.services.validator import FeasibilityValidator
 from app.services.pricing import calculate_price
+from app.services.dxf_generator import svg_to_dxf
 from app.utils.svg_utils import extract_svg_paths, path_complexity_score
 
 router = APIRouter()
@@ -75,6 +76,13 @@ async def run_pipeline(job_id: str, material: str, thickness: float):
         merged_svg_path = OUTPUT_DIR / f"{job_id}_merged.svg"
         merged_svg_path.write_text(merged_svg, encoding="utf-8")
 
+        # Step 4b: Generate DXF file for laser cutting
+        job.step = "dxf_generate"
+        jobs_store[job_id] = job
+        dxf_bytes = svg_to_dxf(merged_svg)
+        dxf_path = OUTPUT_DIR / f"{job_id}_snijbestand.dxf"
+        dxf_path.write_bytes(dxf_bytes)
+
         # Step 5: Validate feasibility
         job.step = JobStep.validate
         jobs_store[job_id] = job
@@ -93,6 +101,7 @@ async def run_pipeline(job_id: str, material: str, thickness: float):
             "merged_svg_path": str(merged_svg_path),
             "customer_svg_path": str(customer_svg_path),
             "silhouette_path": str(silhouette_path),
+            "dxf_path": str(dxf_path),
             "validation": validation_result,
             "pricing": price_result,
             "complexity_score": complexity,

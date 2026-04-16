@@ -17,6 +17,7 @@ class JobStep(str, Enum):
     silhouette = "silhouette"
     vectorize = "vectorize"
     integrate = "integrate"
+    dxf_generate = "dxf_generate"
     validate = "validate"
     done = "done"
 

@@ -174,3 +174,10 @@ export async function listOrders(): Promise<AdminOrder[]> {
   const res = await fetch(`${API_BASE}/api/orders`);
   return handleResponse<AdminOrder[]>(res);
 }
+
+/**
+ * Download the DXF cutting file for an order.
+ */
+export function getDxfDownloadUrl(orderId: string): string {
+  return `${API_BASE}/api/orders/${orderId}/dxf`;
+}

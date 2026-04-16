@@ -91,3 +91,38 @@ async def create_order(order_data: OrderCreate):
 async def list_orders():
     """List all orders (admin endpoint)."""
     return JSONResponse(content=_load_orders())
+
+
+@router.get("/orders/{order_id}/dxf")
+async def download_dxf(order_id: str):
+    """
+    Download the DXF cutting file for a specific order.
+    Returns the DXF file with proper Content-Disposition headers.
+    """
+    import os
+    from fastapi.responses import FileResponse
+    from pathlib import Path
+
+    orders = _load_orders()
+    order = next((o for o in orders if o["id"] == order_id), None)
+    if not order:
+        raise HTTPException(status_code=404, detail=f"Bestelling '{order_id}' niet gevonden.")
+
+    # Look up the job to find the DXF file path
+    job = jobs_store.get(order["job_id"])
+    if not job or not job.result:
+        raise HTTPException(status_code=404, detail="DXF bestand niet gevonden.")
+
+    dxf_path_str = job.result.get("dxf_path")
+    if not dxf_path_str:
+        raise HTTPException(status_code=404, detail="DXF bestand niet beschikbaar voor deze bestelling.")
+
+    dxf_path = Path(dxf_path_str)
+    if not dxf_path.exists():
+        raise HTTPException(status_code=404, detail="DXF bestand is niet meer beschikbaar op de server.")
+
+    return FileResponse(
+        path=str(dxf_path),
+        media_type="application/dxf",
+        filename=f"vuurkorf_{order_id[:8]}_snijbestand.dxf",
+    )

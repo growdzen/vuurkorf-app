@@ -3,6 +3,7 @@
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Suspense } from "react";
+import { getDxfDownloadUrl } from "@/lib/api";
 
 function BevestigingContent() {
   const params = useSearchParams();
@@ -29,6 +30,25 @@ function BevestigingContent() {
             </p>
             <p className="text-xs text-gray-400 mt-2">
               Bewaar dit nummer voor uw administratie.
+            </p>
+          </div>
+        )}
+
+        {orderId && (
+          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 mb-8">
+            <p className="text-sm text-gray-500 mb-3">
+              Download uw lasersnij-bestand
+            </p>
+            <a
+              href={getDxfDownloadUrl(orderId)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 bg-gray-800 text-white font-semibold py-2.5 px-5 rounded-xl hover:bg-gray-700 transition-colors text-sm"
+            >
+              📐 DXF Snijbestand downloaden
+            </a>
+            <p className="text-xs text-gray-400 mt-2">
+              Dit DXF-bestand kan direct naar de lasersnijder worden gestuurd.
             </p>
           </div>
         )}

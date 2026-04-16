@@ -65,6 +65,7 @@ const JOB_STEP_LABELS: Record<string, string> = {
   silhouette: "Silhouet genereren...",
   vectorize: "Vectoriseren...",
   integrate: "Integreren in template...",
+  dxf_generate: "Lasersnijbestand genereren (DXF)...",
   validate: "Maakbaarheid controleren...",
   done: "Klaar!",
 };
