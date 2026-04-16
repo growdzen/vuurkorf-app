@@ -19,6 +19,7 @@ from template_integrator import integrate_silhouette
 from validator import FeasibilityValidator
 from pricing import calculate_price
 from svg_utils import extract_svg_paths, path_complexity_score
+import dxf_generator
 
 UPLOAD_DIR = Path("/tmp/vuurkorf_uploads")
 OUTPUT_DIR = Path("/tmp/vuurkorf_outputs")
@@ -104,6 +105,14 @@ class handler(BaseHTTPRequestHandler):
             paths = extract_svg_paths(customer_svg)
             complexity = path_complexity_score(paths)
             price_result = calculate_price(material, thickness, complexity)
+
+            # Step 6: Generate DXF for laser cutting
+            try:
+                dxf_bytes = dxf_generator.svg_to_dxf(merged_svg)
+                dxf_path = OUTPUT_DIR / f"{job_id}_snijbestand.dxf"
+                dxf_path.write_bytes(dxf_bytes)
+            except Exception as dxf_err:
+                print(f"DXF generation warning: {dxf_err}")
 
             self._json(200, {
                 "job_id": job_id,

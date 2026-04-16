@@ -179,5 +179,5 @@ export async function listOrders(): Promise<AdminOrder[]> {
  * Download the DXF cutting file for an order.
  */
 export function getDxfDownloadUrl(orderId: string): string {
-  return `${API_BASE}/api/orders/${orderId}/dxf`;
+  return `${API_BASE}/api/dxf?order_id=${orderId}`;
 }
